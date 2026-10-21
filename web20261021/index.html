@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>大樂透自動選號與對獎系統（Lotto）</title>
+</head>
+<body>
+
+    <h1>🎰 資訊三乙陳士鉉_大樂透自動選號與對獎系統</h1>
+    <p><b>教學重點：</b>利用 id 屬性與 document.getElementById() 修改網頁內容</p>
+    <button onclick="window.location.reload();">🔄 重新開始</button>
+
+    <!-- 宣告全域變數，用來記錄玩家選號與開獎號碼 -->
+    <script>
+        let userNumbers = [];
+        let winningNumbers = [];
+    </script>
+    <hr> <!-- 水平分隔線 --> <!--[cite: 1] -->
+
+    <!-- 第一區塊：玩家選號區 -->
+    <h3>1. 我的彩券號碼</h3>
+    <!-- 設定 id="my-numbers" 供 JS 更新文字 -->
+    <p id="my-numbers">請點擊下方按鈕進行選號</p>
+    
+    <!-- 按鈕點擊時，直接執行內嵌的 JavaScript 程式碼（不使用 custom function） -->
+    <button onclick="
+        userNumbers = [];
+        while (userNumbers.length < 6) {
+            let randNum = Math.floor(Math.random() * 49) + 1;
+            if (!userNumbers.includes(randNum)) {
+                userNumbers.push(randNum);
+            }
+        }
+        userNumbers.sort((a, b) => a - b);
+        document.getElementById('my-numbers').innerText = '我的號碼：' + userNumbers.join(', ');
+    ">🎲 自動選號</button>
+
+    <hr> <!--[cite: 1] -->
+
+    <!-- 第二區塊：電腦開獎區 -->
+    <h3>2. 本期開獎號碼</h3>
+    <!-- 設定 id="draw-numbers" 供 JS 更新文字 -->
+    <p id="draw-numbers">等待開獎中...</p>
+    
+    <button onclick="
+        winningNumbers = [];
+        while (winningNumbers.length < 6) {
+            let randNum = Math.floor(Math.random() * 49) + 1;
+            if (!winningNumbers.includes(randNum)) {
+                winningNumbers.push(randNum);
+            }
+        }
+        winningNumbers.sort((a, b) => a - b);
+        document.getElementById('draw-numbers').innerText = '開獎號碼：' + winningNumbers.join(', ');
+    ">🎉 開始開獎</button>
+
+    <hr> <!--[cite: 1] -->
+
+    <!-- 第三區塊：對獎結果區 -->
+    <h3>3. 對獎結果</h3>
+    <button onclick="
+        if (userNumbers.length === 0 || winningNumbers.length === 0) {
+            alert('請先點擊「自動選號」與「開始開獎」！');
+        } else {
+            let matchCount = 0;
+            let matchedList = [];
+            
+            // 利用迴圈比對對中幾個號碼
+            for (let i = 0; i < userNumbers.length; i++) {
+                if (winningNumbers.includes(userNumbers[i])) {
+                    matchCount++;
+                    matchedList.push(userNumbers[i]);
+                }
+            }
+
+            let resultText = '對中 ' + matchCount + ' 個號碼！';
+            if (matchCount > 0) {
+                resultText += '（對中號碼：' + matchedList.join(', ') + '）';
+            }
+
+            // 更新到指定 id 的元素中
+            document.getElementById('result-text').innerText = resultText;
+        }
+    ">🔍 進行對獎</button>
+
+    <!-- 顯示對獎結果的標籤 (id="result-text") -->
+    <p id="result-text" style="font-weight: bold;"></p>
+    
+
+</body>
+</html>
